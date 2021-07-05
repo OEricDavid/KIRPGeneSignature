@@ -1,0 +1,58 @@
+knitr::opts_chunk$set(echo = TRUE)
+traceback()  # if error occurred during knit()
+if (!require('cgdsr')) {install.packages('cgdsr')} # To donwload data of cbioportal
+if (!require('TCGAbiolinks')) {devtools::install_github(repo = "BioinformaticsFMRP/TCGAbiolinks")} # To donwload data of GDC
+if (!require('stringr')) {install.packages('stringr')} # string manipulation, part of tidyverse
+if (!require('readr')) {install.packages('readr')} # data import, part of the core tidyverse
+if (!require('dplyr')) {install.packages('dplyr')} # a grammar of data manipulation, part of tidyverse
+if (!require('tidyr')) {install.packages('tidyr')} # tidy data describes a standard way of storing data
+if (!require('ggplot2')) {install.packages('ggplot2')} #  for declaratively creating graphics
+if (!require('scales')) {install.packages('scales')} # Graphical scales map data to aesthetics, determining breaks and labels for axes and legends
+if (!require('ggthemes')) {install.packages('ggthemes')} # Some extra themes, geoms, and scales for 'ggplot2'
+if (!require('caret')) {install.packages('caret')} # misc functions for training and plotting classification and regression models.
+if (!require('kohonen')) {install.packages('kohonen')} # supervised and Unsupervised Self-Organising Maps
+if (!require('FactoMineR')) {install.packages('FactoMineR')} # Exploratory data analysis methods to summarize, visualize and describe datasets. PCA.
+if (!require('corrplot')) {install.packages('corrplot')} # A graphical display of a correlation matrix or general matrix
+if (!require('factoextra')) {install.packages('factoextra')} # Extract and Visualize the Results of Multivariate Data Analyses. PCA. CA. MCA.
+if (!require('SuperLearner')) {install.packages("SuperLearner")} # SuperLearner is an algorithm that uses cross-validation to estimate the performance of multiple machine learning models, or the same model with different settings. It then creates an optimal weighted average of those models, aka an “ensemble”, using the test data performance.
+if (!require('DMwR')) {install.packages("DMwR")} # Functions and data for the book "Data Mining with R"
+if (!require('psych')) {install.packages("psych")} # for corr.test - Find the correlations, sample sizes, and probability values between elements of a matrix or data.frame.
+query.lung <- GDCquery(project = "TCGA-LUSC",
+data.category = "Transcriptome Profiling",
+data.type = "Gene Expression Quantification",
+workflow.type = "HTSeq - Counts")
+setwd("~/LUSC-QUERY")
+projects <- getGDCprojects()$project_id
+source("https://bioconductor.org/biocLite.R")
+biocLite("TCGAbiolinks")
+biocLite("SummarizedExperiment")
+biocLite("stringi")
+library(TCGAbiolinks)
+library(SummarizedExperiment)
+library(dplyr)
+library(DT)
+query_Target <- GDCquery(project = "TARGET-AML",
+data.category = "Transcriptome Profiling",
+data.type = "Gene Expression Quantification",
+workflow.type = "HTSeq - Counts")
+query_Target <- GDCquery(project = "TARGET-AML",
+data.category = "Transcriptome Profiling",
+data.type = "Gene Expression Quantification",
+workflow.type = "HTSeq - Counts")
+queryDown_Target <- GDCquery(project = "TARGET-AML",
+data.category = "Transcriptome Profiling",
+data.type = "Gene Expression Quantification",
+workflow.type = "HTSeq - Counts",
+barcode = c(dataSmTB_short_Target, dataSmNB_short_Target))
+source('https://bioconductor.org/biocLite.R')
+biocLite('Bioconductor/GenomicDataCommons')
+biocLite('BioinformaticsFMRP/TCGAbiolinks',ref = "GenomicDataCommons")
+query_Target <- GDCquery(project = "TARGET-AML",
+data.category = "Transcriptome Profiling",
+data.type = "Gene Expression Quantification",
+workflow.type = "HTSeq - Counts")
+library(TCGAbiolinks)
+query_Target <- GDCquery(project = "TARGET-AML",
+data.category = "Transcriptome Profiling",
+data.type = "Gene Expression Quantification",
+workflow.type = "HTSeq - Counts")

@@ -1,0 +1,96 @@
+### DOSE (Yu et al. 2015) oferece suporte à análise semântica e de enriquecimento da Ontologia da doença (DO). 
+### A função enriquecerDO é muito útil para identificar a associação de doenças de genes interessantes, e a função 
+### função gseDO é projetada para análise de enriquecimento de conjunto de genes de DO.
+
+### Além disso, o DOSE também suporta a análise de enriquecimento de Network of Cancer Gene (NCG) (A. Et al. 2016)
+### e Disease Gene Network (Janet et al. 2015), consulte as vinhetas DOSE
+
+
+### No exemplo a seguir, selecionamos alteração dobrada acima de 1,5 como os genes diferenciais e analisamos sua associação com a doença.
+
+```{r}
+install.packages("devtools")
+devtools::install_github("YuLab-SMU/clusterProfiler.dplyr")
+```
+
+```{r}
+library(DOSE)
+
+d <- read.csv("gene.csv")
+
+geneList <- d[,3]
+
+names(geneList) <- as.character(d[,2])
+
+geneList <- sort(geneList, decreasing = TRUE)
+
+head(geneList)
+```
+
+
+```{r}
+
+eg = bitr(names, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+
+head(eg)
+
+```
+
+
+```{r}
+data(gene)
+gene <- names(gene)[abs(gene) > 1.5]
+head(gene)
+```
+
+```{r}
+x <- enrichDO(gene          = gene,
+              ont           = "DO",
+              pvalueCutoff  = 0.05,
+              pAdjustMethod = "BH",
+              universe      = names(geneList),
+              minGSSize     = 5,
+              maxGSSize     = 500,
+              qvalueCutoff  = 0.05,
+              readable      = FALSE)
+head(x)
+```
+
+### A função richDO requer um vetor de ID entrezgene como entrada, principalmente a lista de genes diferenciais 
+### de estudos de perfil de expressão gênica. Se o usuário precisar converter outro tipo de ID de gene em entrezgene ID,
+### recomendamos o uso da função bitr fornecida pelo clusterProfiler.
+
+### O parâmetro ont pode ser “DO” ou “DOLite”, DOLite (Du et al. 2009) foi construído para agregar os termos DO 
+### redundantes. Os dados DOLite não são atualizados, recomendamos o uso do usuário ont = "DO". pvalueCutoff definir
+### o valor de corte do valor p e ajustar o valor p; pAdjustMethod definindo os métodos de correção do valor p, 
+### incluindo a correção de Bonferroni ("bonferroni"), Holm ("holm"), Hochberg ("hochberg"), Hommel ("hommel"), 
+### Benjamini & Hochberg ("BH") e Benjamini & Yekutieli (“BY”) enquanto qvalueCutoff é usado para controlar os valores q.
+
+### O universo definindo o universo de genes de fundo para teste. Se o usuário não definir explicitamente este 
+### parâmetro, o richDO definirá o universo para todos os genes humanos que possuem a anotação DO.
+
+### O minGSSize (e maxGSSize) indica que apenas os termos DO que têm mais do que minGSSize (e menos do que maxGSSize)
+### genes anotados serão testados
+
+### O legível é um parâmetro lógico, indica se os IDs entrezgene serão mapeados para símbolos de genes ou não.
+### Também implementamos a função setReadable que ajuda o usuário a converter entrezgene IDs em símbolos de genes.
+
+x <- setReadable(x, 'org.Hs.eg.db')
+head(x)
+
+### Network of Cancer Gene (NCG) (A. Et al. 2016) é um repositório com curadoria manual de genes de câncer.
+### O NCG versão 5.0 (agosto de 2015) coleta 1.571 genes de câncer de 175 estudos publicados. DOSE apóia a 
+### análise da lista de genes e determina se eles são enriquecidos em genes conhecidos por serem mutados em 
+### um determinado tipo de câncer.
+
+
+gene2 <- names(geneList)[abs(geneList) < 3]
+ncg <- enrichNCG(gene2)
+head(ncg)
+
+
+
+
+dgn <- enrichDGN(gene)
+head(dgn)
+
